@@ -30,6 +30,7 @@ public class EstoqueWS {
 	
 	@WebMethod
 	public ItemEstoque getQuantidade(String codigo){
+		System.out.println(repositorio.get(codigo));
 		return repositorio.get(codigo);
 	}
 }

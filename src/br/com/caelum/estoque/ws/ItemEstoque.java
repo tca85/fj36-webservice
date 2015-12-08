@@ -25,4 +25,12 @@ public class ItemEstoque {
 	public Integer getQuantidade() {
 		return quantidade;
 	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
 }
