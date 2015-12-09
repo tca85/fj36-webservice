@@ -18,7 +18,7 @@ import javax.jws.WebService;
  * @author tca85
  *
  */
-@WebService
+@WebService(targetNamespace="http://caelum.com.br/estoquews/v1")
 @Stateless
 public class EstoqueWS {
 	private Map<String, ItemEstoque> repositorio = new HashMap<>();
@@ -45,12 +45,22 @@ public class EstoqueWS {
 	 * Contract First - pensa primeiro no contrato (wsdl) ao invés do serviço
 	 * "TDD" do JAX-WS
 	 * 
+	 * para evitar o envio do token para cada requisição, é necessário implementar
+	 * um handler
+	 * 
 	 * @param codigos
+	 * @param token
 	 * @return
 	 */
 	@WebMethod(operationName="ItensPeloCodigo")
 	@WebResult(name="ItemEstoque")
-	public List<ItemEstoque> getQuantidade(@WebParam(name="codigo") List<String> codigos){
+	public List<ItemEstoque> getQuantidade(@WebParam(name="codigo") List<String> codigos, 
+			                               @WebParam(name="tokenUsuario", header=true) String token){
+		
+		if (token == null || !token.equals("TOKEN123")) {
+			throw new AutorizacaoException("Não autorizado");
+		}
+		
 		 List<ItemEstoque> itens = new ArrayList<ItemEstoque>();
 		 
 		 if (codigos == null || codigos.isEmpty()) {
@@ -66,6 +76,4 @@ public class EstoqueWS {
 		 return itens;
 	}
 	//---------------------------------------------------------------------------------------------
-	
-	
 }
