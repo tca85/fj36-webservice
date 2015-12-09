@@ -42,6 +42,9 @@ public class EstoqueWS {
 	 * SOA Falacies - o correto é receber uma lista e retornar uma lista
 	 * sempre limitada em uma quantidade específica
 	 * 
+	 * Contract First - pensa primeiro no contrato (wsdl) ao invés do serviço
+	 * "TDD" do JAX-WS
+	 * 
 	 * @param codigos
 	 * @return
 	 */
