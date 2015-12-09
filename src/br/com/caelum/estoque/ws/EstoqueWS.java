@@ -25,7 +25,7 @@ public class EstoqueWS {
 	
 	//---------------------------------------------------------------------------------------------
 	/**
-	 * 
+	 * Cria uma quantidade fictícia para cada um dos códigos existentes
 	 */
 	public EstoqueWS() {
 		repositorio.put("SOA", new ItemEstoque("SOA", 5));
