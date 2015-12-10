@@ -10,6 +10,7 @@ import javax.ejb.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -75,12 +76,22 @@ public class PagamentoResource {
 	 * @throws URISyntaxException
 	 */
 	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response criarPagamento(Transacao transacao) throws URISyntaxException{
 		Pagamento pagamento = new Pagamento();
 		
 		pagamento.setId(idPagamento++);
 		pagamento.setValor(transacao.getValor());
+		
+		pagamento.comStatusCriado();
+		
+		// após isso, ele retorna as urls utilizando o conceito de HATEOAS:
+		// {"id":2,"status":"CRIADO","valor":39.9,
+		//   "links":[
+		//       {"rel":"confirmar","uri":"/pagamentos/2","method":"PUT"},
+		//       {"rel":"cancelar","uri":"/pagamentos/2","method":"DELETE"}
+		//    ]
+		//  }
 		
 		repositorio.put(pagamento.getId(), pagamento);
 		
@@ -90,7 +101,30 @@ public class PagamentoResource {
 				       .entity(pagamento)
 				       .type(MediaType.APPLICATION_JSON_TYPE)
 				       .build();
-		
 	}
+	//---------------------------------------------------------------------------------------------
+	
+	/**
+	 * A chamada do método criarPagamento retorna a lista dos métodos
+	 * possíveis a serem utilizados. Nesse caso, estamos tratanto o PUT
+	 * 
+	 *  {"rel":"confirmar","uri":"/pagamentos/2","method":"PUT"}
+	 *  
+	 *  curl -i -H "Content-type: application/json" -X PUT http://localhost:8080/fj36-webservice/pagamentos/2
+	 * 
+	 * @param pagamentoId
+	 * @return
+	 */
+	@PUT
+	@Path("/{id}")
+	@Produces({MediaType.APPLICATION_JSON})
+	public Pagamento confirmarPagamento(@PathParam("id") Integer pagamentoId){
+		Pagamento pagamento = repositorio.get(pagamentoId);
+		pagamento.comStatusConfirmado();
+		
+		System.out.println("Pagamento confirmado " + pagamento);
+		
+		return pagamento;
+	}	
 	//---------------------------------------------------------------------------------------------
 }
