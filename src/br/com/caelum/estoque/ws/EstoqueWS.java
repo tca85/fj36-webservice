@@ -12,8 +12,13 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 
 /**
- * WebService
+ * Web Service
+ * 
+ * 
  * http://localhost:8080/fj36-webservice/EstoqueWS?wsdl
+ * 
+ * Forma de versionar:
+ * http://soapatterns.org/design_patterns/canonical_versioning
  * 
  * @author tca85
  *
@@ -39,14 +44,20 @@ public class EstoqueWS {
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * SOA Falacies - o correto é receber uma lista e retornar uma lista
-	 * sempre limitada em uma quantidade específica
+	 * SOA Fallacies - o correto é receber uma lista e retornar uma lista
+	 * sempre limitada em uma quantidade específica. Isso se chama granularidade do serviço
 	 * 
 	 * Contract First - pensa primeiro no contrato (wsdl) ao invés do serviço
-	 * "TDD" do JAX-WS
+	 * "TDD" do JAX-WS, senão os parâmetros serão disponibilizados como arg0... entre outras coisas
 	 * 
-	 * para evitar o envio do token para cada requisição, é necessário implementar
-	 * um handler
+	 * @WebMethod e @WebParam mudam a mensagem SOAP de ida
+	 * @WebResult muda a mensagem de retorno
+	 * 
+	 * Para evitar o envio do token para cada requisição, é necessário implementar
+	 * um handler (pesquisar sobre isso), ou utilizar a extensão WS-Security
+	 * do CXF ou AXIS
+	 * 
+	 * A chamada desse Web Service está dentro da classe Carrinho do fj36-livraria
 	 * 
 	 * @param codigos
 	 * @param token
@@ -75,5 +86,16 @@ public class EstoqueWS {
 		 
 		 return itens;
 	}
+	//---------------------------------------------------------------------------------------------
+	
+	/**
+	 * Por padrão, todos métodos são publicados no Web Service, mas podemos excluir qualquer um
+	 * deles através da anotação
+	 */
+	@WebMethod(exclude=true)
+	public void metodoNaoDisponibilizadoWS(){
+		System.out.println("método não disponibilizado");
+	}
+	
 	//---------------------------------------------------------------------------------------------
 }

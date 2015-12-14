@@ -22,6 +22,7 @@ import br.com.caelum.payfast.modelo.Transacao;
 
 /**
  * Gerenciamento de pagamentos através do JAX-RS
+ * utilizando a implementação RestEasy do Jboss
  * 
  * @author tca85
  *
@@ -34,7 +35,9 @@ public class PagamentoResource {
 
 	//---------------------------------------------------------------------------------------------
 	/**
-	 * em um projeto real, o repositório seria o banco de dados
+	 * Em um projeto real, o repositório seria o banco de dados
+	 * nesse caso estamos usando o construtor para popular um pagamento
+	 * no repositório
 	 */
 	public PagamentoResource() {
 		Pagamento pagamento = new Pagamento();
@@ -47,6 +50,7 @@ public class PagamentoResource {
 	//---------------------------------------------------------------------------------------------
 	/**
 	 * Recebe uma requisição via GET e devolve um JSON ou XML
+	 * 
 	 * Por padrão, será devolvido em XML quando requisitado direto na URL pelo browser
 	 * 
 	 * http://localhost:8080/fj36-webservice/pagamentos/1
@@ -63,8 +67,8 @@ public class PagamentoResource {
 	public Pagamento buscaPagamento(@PathParam("id") Integer id){
 		return repositorio.get(id);
 	}
-	//---------------------------------------------------------------------------------------------
 	
+	//---------------------------------------------------------------------------------------------
 	/**
 	 * Recebe uma transação financeira para criar um pagamento
 	 * a partir de seus dados
@@ -86,6 +90,7 @@ public class PagamentoResource {
 		pagamento.comStatusCriado();
 		
 		// após isso, ele retorna as urls utilizando o conceito de HATEOAS:
+		//
 		// {"id":2,"status":"CRIADO","valor":39.9,
 		//   "links":[
 		//       {"rel":"confirmar","uri":"/pagamentos/2","method":"PUT"},
@@ -102,8 +107,8 @@ public class PagamentoResource {
 				       .type(MediaType.APPLICATION_JSON_TYPE)
 				       .build();
 	}
-	//---------------------------------------------------------------------------------------------
 	
+	//---------------------------------------------------------------------------------------------
 	/**
 	 * A chamada do método criarPagamento retorna a lista dos métodos
 	 * possíveis a serem utilizados. Nesse caso, estamos tratanto o PUT
