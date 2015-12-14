@@ -10,6 +10,8 @@ import javax.jms.TextMessage;
 /**
  * Message Driven Bean
  * 
+ * Faz a leitura do tópico TOPICO.LIVRARIA criado no Jboss
+ * 
  * @author tca85
  *
  */
